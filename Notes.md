@@ -63,3 +63,32 @@ function strip(number) {
 - I am wondering what would happen if you have a 32 bit system that runs a calculator in the browser and you use `toPrecision` to more than 7 or attempt to use 15?
   - I would assume unexpected results would be displayed to the user
 - should explore this by first building a very basic app that allows inputting two numbers and an operand and see what happens with various strategies
+- Microsoft's calculator on Windows 10 64-bit limits total digits to 32
+  - digits after the decimal are limited to 32 (assuming there are no digits before the decimal point)
+
+## Resources
+
+- floating point [guide](https://floating-point-gui.de/languages/javascript/ "website with some information about floating point in JS")
+
+## Tests
+
+- this works well:
+
+```js
+console.log(parseFloat((0.1 + 0.2).toPrecision(16)));
+```
+
+- giving `0.3`
+- `.1*.2` gives `0.020000000000000004` in the original app
+- using parseFloat and toPrecision we get `0.02`
+
+- with our Samsung calculator example (limited to 10 decimal places)
+
+```js
+console.log(parseFloat((0.9999999999).toPrecision(9)));
+```
+
+- gives 1 which is not good
+- the same value with precision 10 works fine
+- as long as the precision is equal (or greater than) the number of decimal places, it appears to work well
+- `parseFloat((0.9999999999 * 0.9999999999).toPrecision(10)));` agrees with our Samsung calculator
