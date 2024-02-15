@@ -62,7 +62,7 @@ function strip(number) {
   - the A71 is 64 bit and so it makes sense that it can handle 10 places of decimals
 - I am wondering what would happen if you have a 32 bit system that runs a calculator in the browser and you use `toPrecision` to more than 7 or attempt to use 15?
   - I would assume unexpected results would be displayed to the user
-- should explore this by first building a very basic app that allows inputting two numbers and an operand and see what happens with various strategies
+- should explore this by first building a very basic app that allows inputting two operands and an operator and see what happens with various strategies
 - Microsoft's calculator on Windows 10 64-bit limits total digits to 32
   - digits after the decimal are limited to 32 (assuming there are no digits before the decimal point)
 
@@ -92,3 +92,38 @@ console.log(parseFloat((0.9999999999).toPrecision(9)));
 - the same value with precision 10 works fine
 - as long as the precision is equal (or greater than) the number of decimal places, it appears to work well
 - `parseFloat((0.9999999999 * 0.9999999999).toPrecision(10)));` agrees with our Samsung calculator
+
+- I think we need to use a decimal arithmetic library. With `toPrecision` we are hoping that the float precision anomaly will occur outside the precision that we set but this is arbitrary
+  - for `.1 * .2` using precision of 15 is fine but with a precision of 20 we have `0.020000000000000004`
+- the same issue occurs with `toFixed`
+- use a library like decimal.js
+  - each pair of numbers separated by an operator is calculated using the library
+  - the answer is stored in the running total
+  - if the user enters another operator, we then take the value from the running total as the first of our next pair of operands
+  - repeat until user hits `=`
+  - at this point this value is our first operand if the user chooses to continue entering values
+
+## Design
+
+- Samsung calculator reduces font size when the content will overflow the display horizontally
+- it reduces the font size again to avoid horizontal overflow
+- after this, it starts to wrap the output to a new line
+- eventually the display becomes vertically scrollable
+- a maximum of 3 lines are displayed at any one time
+- the display area remains fixed throughout this
+
+### Components
+
+- Display
+  - displays what the user has input
+  - displays the answer when the user hits `=`
+- RunningTotal
+  - displays the current value based on the operators and operands that have been input on the display
+
+### State
+
+- an array (possibly) containing the numbers and operands that have been input so far by the user
+- currenttotal - stores the current total as calculated using the operands and operators that have been input so far
+- firstOperand
+- operator
+- secondOperand
