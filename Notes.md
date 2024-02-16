@@ -29,6 +29,8 @@ Given that I have just finished a TypeScript course, I decided to revisit this p
 - examine old code and see if you can figure out what is going on!
   - is there anything worth keeping?
 - think about design of new app
+- come back to this later - I'm not writing TypeScript on this project, but I'm spending time designing this from the ground up
+  - this is too complex a project to start out practicing TypeScript concepts
 
 ## Floating Point Precision
 
